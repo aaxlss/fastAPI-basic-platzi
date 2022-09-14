@@ -4,6 +4,7 @@ from pydantic import BaseModel
 from pydantic import Field
 from fastapi import FastAPI, Query, Path
 from fastapi import Body
+from fastapi import status
 app = FastAPI()
 
 #Models
@@ -46,21 +47,31 @@ class PersonOut(PersonBase):
     pass
     
 #decorador para nombrar una funcion para un path
-@app.get('/')
+@app.get(
+    path='/', 
+    status_code=status.HTTP_200_OK
+    )
 def home():
     return {'hello': 'World'}
 
 
 
 #Request and response body
-@app.post('/person/new', response_model=PersonOut)
+@app.post(
+    path='/person/new',
+     response_model=PersonOut,
+     status_code=status.HTTP_201_CREATED
+     )
 def create_person(person: Person = Body()):
     return person
 
 
 #validaciones query parameters
 
-@app.get('/person/detail')
+@app.get(
+    path='/person/detail',
+    status_code=status.HTTP_200_OK
+    )
 def show_person(
     name: Optional[str] = Query(
         None, 
@@ -79,7 +90,9 @@ def show_person(
 
 #validations path parameters
 #if there are 2 methos with the same name in python, the last one will be the method that will execute
-@app.get('/person/details/{person_id}')
+@app.get(
+    path='/person/details/{person_id}',
+    status_code=status.HTTP_200_OK)
 def show_person(
     person_id: int = Path(..., gt = 0)
 ):
@@ -87,7 +100,10 @@ def show_person(
 
 
 #Validation: Request Body
-@app.put("/person/{person_id}")
+@app.put(
+    path="/person/{person_id}",
+    status_code=status.HTTP_200_OK
+    )
 def update_person(
     person_id: int = Path(
         ...,
