@@ -71,7 +71,16 @@ def home():
      status_code=status.HTTP_201_CREATED,
      tags=["Persons"]
      )
-def create_person(person: Person = Body()):
+def create_person(person: Person = Body(...)):
+    """Create Person
+
+        Receive information and store it in the data base
+
+    Keyword Arguments:
+        person: Person
+    Returns:
+        Person
+    """
     return person
 
 
