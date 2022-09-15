@@ -3,7 +3,7 @@ from typing import Optional
 from pydantic import BaseModel
 from pydantic import Field
 from pydantic import EmailStr
-from fastapi import FastAPI, Query, Path, Form, Header, Cookie
+from fastapi import FastAPI, Query, Path, Form, Header, Cookie, UploadFile, File
 from fastapi import Body
 from fastapi import status
 app = FastAPI()
@@ -158,3 +158,16 @@ def contact(first_name: str = Form(
     ads: Optional[str] = Cookie(default=None)
     ):
     return user_agent
+
+#files
+@app.post(
+    path='/post-image'
+    )
+def post_image(
+    image: UploadFile = File(...)
+):
+    return {
+        "Filename": image.filename,
+        "Format": image.content_type,
+        "Size(kb)": round(len(image.file.read())/1024, ndigits=2)
+    }
